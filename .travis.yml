@@ -1,9 +1,16 @@
-language: java 
-sudo: required
+language: java
+
+jdk:
+  - openjdk8
+  - openjdk11
+
+cache:
+  directories:
+    - ${HOME}/.m2/repository
+
 services:
   - docker
-jdk:
-  - oraclejdk8
+
 notifications:
   webhooks:
     urls:
@@ -12,12 +19,17 @@ notifications:
     on_failure: always  # options: [always|never|change] default: always
     on_start: never     # options: [always|never|change] default: always
 
+branches:
+  only:
+    - master
+    - develop
+
 before_script:
   - echo MAVEN_OPTS=-Xmx1536m > ~/.mavenrc
 
 # Enable integration tests
 script:
-  - mvn verify -B -DskipITs=false
+  - mvn verify -B
 
 # Send coverage data
 after_success:
